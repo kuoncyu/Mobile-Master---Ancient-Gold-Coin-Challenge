@@ -3,107 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>移動高手 - 旗艦擴展版</title>
+    <title>移動高手 - 完美對齊版</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
-
-        :root {
-            --jade: #004d00;
-            --gold: #ffd700;
-            --bronze: #8b4513;
-            --silk: #660000;
-            --paper: #fdf5e6;
-        }
-
+        :root { --jade: #004d00; --gold: #ffd700; --bronze: #8b4513; --silk: #660000; --paper: #fdf5e6; }
         * { box-sizing: border-box; touch-action: none; -webkit-user-select: none; }
-
-        body {
-            margin: 0; padding: 0;
-            background: #000;
-            color: #f0e68c;
-            font-family: "Microsoft JhengHei", serif;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh;
-        }
-
-        #app {
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle, #3a0a0a 0%, #000 100%);
-            position: relative; display: flex; flex-direction: column;
-            border: 4px solid var(--bronze);
-        }
-
-        /* 介面控制 */
-        .screen { 
-            position: absolute; inset: 0;
-            display: none; flex-direction: column; align-items: center; 
-            padding: 20px; text-align: center;
-        }
+        body { margin: 0; background: #000; color: #f0e68c; font-family: "Microsoft JhengHei", serif; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        #app { width: 100vw; height: 100vh; background: radial-gradient(circle, #3a0a0a 0%, #000 100%); position: relative; display: flex; flex-direction: column; border: 4px solid var(--bronze); }
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 20px; text-align: center; }
         .active { display: flex; }
-
-        h1 { 
-            font-family: 'Ma Shan Zheng', cursive; 
-            font-size: clamp(2rem, 8vw, 3.5rem); color: var(--gold); 
-            margin: 10px 0; text-shadow: 0 0 10px var(--silk);
-        }
-
-        /* 排行榜分頁 */
-        .rank-container {
-            width: 100%; max-width: 450px; background: var(--paper);
-            color: #331a00; border: 3px double var(--bronze);
-            padding: 10px; border-radius: 4px; margin: 10px 0;
-        }
-        .rank-tabs {
-            display: flex; overflow-x: auto; gap: 5px; margin-bottom: 8px;
-            padding-bottom: 5px; border-bottom: 2px solid var(--bronze);
-        }
-        .tab-btn {
-            background: #d2b48c; border: 1px solid var(--bronze);
-            padding: 5px 12px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
-        }
-        .tab-btn.active { background: var(--silk); color: var(--gold); }
-        .rank-list { height: 100px; overflow-y: auto; font-size: 0.9rem; }
-        .rank-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #aaa; }
-
-        /* 選關網格 */
-        .lv-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 8px; width: 100%; max-width: 400px; margin-top: 10px;
-        }
-        .lv-btn {
-            background: var(--jade); color: var(--gold); border: 1px solid var(--gold);
-            padding: 10px 5px; border-radius: 4px; cursor: pointer; font-size: 0.9rem;
-        }
-        .lv-btn:active { background: var(--bronze); }
-
-        /* 遊戲區域 */
-        #game-area { 
-            flex-grow: 1; position: relative; width: 100%; 
-            overflow: hidden; background: rgba(0,0,0,0.2);
-            box-shadow: inset 0 0 50px #000;
-        }
-        .slot {
-            position: absolute; border: 1px dashed rgba(255, 215, 0, 0.15);
-            border-radius: 50%; transform: translate(-50%, -50%); z-index: 1;
-            transition: border 0.3s;
-        }
-        .coin {
-            position: absolute; background: radial-gradient(circle, #f9d976 0%, #b28a15 60%, #8a6d10 100%);
-            border: 2px solid #5a3e00; border-radius: 50%; z-index: 10;
-            transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            touch-action: none;
-        }
+        h1 { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2rem, 8vw, 3.5rem); color: var(--gold); margin: 10px 0; }
+        
+        /* 遊戲區 */
+        #game-area { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: rgba(0,0,0,0.3); }
+        .slot { position: absolute; border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; }
+        .coin { position: absolute; background: radial-gradient(circle, #f9d976 0%, #b28a15 60%, #8a6d10 100%); border: 2px solid #5a3e00; border-radius: 50%; z-index: 10; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px #000; cursor: grab; }
         .coin::before { content: ""; width: 25%; height: 25%; background: #3d2b00; border: 1px solid var(--gold); }
-        .coin.dragging { z-index: 100; transform: translate(-50%, -50%) scale(1.15); opacity: 0.9; }
+        .coin.dragging { z-index: 100; opacity: 0.9; cursor: grabbing; }
 
-        /* 鍵盤 */
+        /* UI */
+        .rank-container { width: 100%; max-width: 450px; background: var(--paper); color: #331a00; border: 3px double var(--bronze); padding: 10px; margin: 10px 0; }
+        .rank-tabs { display: flex; overflow-x: auto; gap: 5px; border-bottom: 2px solid var(--bronze); margin-bottom: 5px; }
+        .tab-btn { background: #d2b48c; border: 1px solid var(--bronze); padding: 5px 12px; font-size: 0.8rem; cursor: pointer; }
+        .tab-btn.active { background: var(--silk); color: var(--gold); }
+        .rank-list { height: 80px; overflow-y: auto; font-size: 0.85rem; }
+        .lv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; }
+        .lv-btn { background: var(--jade); color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 4px; cursor: pointer; }
+        .btn { background: var(--jade); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .stats-bar { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); display: flex; justify-content: space-around; border-bottom: 1px solid var(--bronze); }
         .keyboard { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 15px; width: 100%; max-width: 500px; }
         .key { background: #333; padding: 12px 2px; border-radius: 4px; color: #fff; font-size: 0.75rem; cursor: pointer; }
-
-        .btn { background: var(--jade); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin: 5px; }
-        .stats-bar { width: 100%; padding: 8px; background: rgba(0,0,0,0.6); display: flex; justify-content: space-around; border-bottom: 1px solid var(--bronze); font-size: 0.9rem;}
     </style>
 </head>
 <body>
@@ -113,16 +42,15 @@
         <h1>移動高手</h1>
         <div class="rank-container">
             <div class="rank-tabs" id="rank-tabs"></div>
-            <div class="rank-list" id="rank-content"></div>
+            <div id="rank-content" class="rank-list"></div>
         </div>
-        <h3 style="margin: 5px 0; color: var(--gold);">— 選擇關卡 —</h3>
         <div class="lv-grid" id="lv-grid"></div>
-        <button class="btn" style="margin-top: 10px;" onclick="toggleFS()">⛶ 全螢幕</button>
+        <button class="btn" style="margin-top:15px" onclick="toggleFS()">⛶ 全螢幕</button>
     </div>
 
     <div id="scr-login" class="screen">
-        <h2 style="color:var(--gold)">請輸入勇士大名</h2>
-        <input type="text" id="username" readonly style="width: 280px; font-size: 2rem; text-align: center; background: #000; border: 2px solid var(--gold); color: var(--gold);">
+        <h2 style="color:var(--gold)">閣下尊姓大名?</h2>
+        <input type="text" id="username" readonly style="width:280px; font-size:2rem; text-align:center; background:#000; border:2px solid var(--gold); color:var(--gold);">
         <div class="keyboard" id="kb"></div>
         <div style="margin-top:20px;">
             <button class="btn" style="background:#444" onclick="delKey()">退格</button>
@@ -133,14 +61,14 @@
     <div id="scr-game" class="screen" style="padding:0;">
         <div class="stats-bar">
             <span>玩家: <b id="st-name"></b></span>
-            <span>關卡: <b id="st-lv"></b></span>
+            <span>層數: <b id="st-lv"></b></span>
             <span>步數: <b id="st-moves">0</b></span>
         </div>
         <div id="game-area"></div>
-        <div style="padding: 10px;">
-            <button class="btn" style="background:#444" onclick="toLobby()">回首頁</button>
-            <button class="btn" onclick="initLevel()">重設</button>
-            <button class="btn" style="background:var(--silk)" onclick="checkWin()">驗證</button>
+        <div style="padding: 15px; display: flex; gap: 10px;">
+            <button class="btn" style="background:#444" onclick="toLobby()">首頁</button>
+            <button class="btn" onclick="initLevel()">重置</button>
+            <button class="btn" style="background:var(--silk)" onclick="checkWin()">完成</button>
         </div>
     </div>
 </div>
@@ -153,27 +81,22 @@
         o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
     }
 
-    let curLv = 2;
-    let moves = 0;
-    let pName = localStorage.getItem('p_name') || "";
-    let viewRankLv = 2;
+    let curLv = 2, moves = 0, pName = localStorage.getItem('p_name') || "", viewRankLv = 2;
+    let gap, vGap, centerX, centerY, coinSize;
 
-    // --- 初始化首頁 ---
+    // --- 初始化 UI ---
     function initLobby() {
         const grid = document.getElementById('lv-grid');
         const tabs = document.getElementById('rank-tabs');
         grid.innerHTML = ""; tabs.innerHTML = "";
         for (let i = 2; i <= 10; i++) {
-            const lb = document.createElement('div');
-            lb.className = 'lv-btn';
+            const lb = document.createElement('div'); lb.className = 'lv-btn';
             lb.innerHTML = `<b>${i}層</b><br><small>${(i*(i+1))/2}枚</small>`;
             lb.onclick = () => { curLv = i; pName ? startGame() : show('scr-login'); };
             grid.appendChild(lb);
 
-            const tb = document.createElement('div');
-            tb.className = `tab-btn ${i === viewRankLv ? 'active' : ''}`;
-            tb.innerText = `${i}層`;
-            tb.onclick = () => { viewRankLv = i; updateRankView(); };
+            const tb = document.createElement('div'); tb.className = `tab-btn ${i === viewRankLv ? 'active' : ''}`;
+            tb.innerText = `${i}層`; tb.onclick = () => { viewRankLv = i; updateRankView(); };
             tabs.appendChild(tb);
         }
         updateRankView();
@@ -182,10 +105,10 @@
     function updateRankView() {
         document.querySelectorAll('.tab-btn').forEach((b, idx) => b.classList.toggle('active', (idx + 2) === viewRankLv));
         const content = document.getElementById('rank-content');
-        let allRanks = JSON.parse(localStorage.getItem('ranks_sep_v4') || "{}");
+        let allRanks = JSON.parse(localStorage.getItem('ranks_v5') || "{}");
         let lvData = allRanks[viewRankLv] || [];
-        content.innerHTML = lvData.length === 0 ? `<p style="text-align:center;color:#666">第 ${viewRankLv} 層暫無紀錄</p>` : 
-            lvData.map((r, i) => `<div class="rank-item"><span>${i+1}. ${r.name}</span><span>${r.moves} 步</span></div>`).join("");
+        content.innerHTML = lvData.length === 0 ? `<p>第 ${viewRankLv} 層暫無紀錄</p>` : 
+            lvData.map((r, i) => `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #ccc"><span>${i+1}. ${r.name}</span><span>${r.moves}步</span></div>`).join("");
     }
 
     // --- 鍵盤 ---
@@ -196,156 +119,149 @@
         kb.appendChild(d);
     });
     function delKey() { const i = document.getElementById('username'); i.value = i.value.slice(0,-1); }
-    function confirmLogin() {
-        pName = document.getElementById('username').value || "GUEST";
-        localStorage.setItem('p_name', pName); startGame();
-    }
+    function confirmLogin() { pName = document.getElementById('username').value || "HERO"; localStorage.setItem('p_name', pName); startGame(); }
 
-    function show(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if (id === 'scr-lobby') initLobby();
-    }
+    function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if (id === 'scr-lobby') initLobby(); }
     function toLobby() { show('scr-lobby'); }
     function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
 
-    function startGame() {
-        document.getElementById('st-name').innerText = pName;
-        document.getElementById('st-lv').innerText = curLv + " 層";
-        show('scr-game'); initLevel();
+    function startGame() { document.getElementById('st-name').innerText = pName; document.getElementById('st-lv').innerText = curLv + "層"; show('scr-game'); initLevel(); }
+
+    // --- 核心幾何計算 (修正對齊) ---
+    function getPos(r, c) {
+        // 使用嚴格的幾何公式
+        return {
+            x: centerX + (c * gap) - (r * gap / 2),
+            y: centerY + (r * vGap)
+        };
     }
 
-    // --- 核心：動態鋪滿格點系統 ---
     function initLevel() {
         const area = document.getElementById('game-area');
-        area.innerHTML = ""; moves = 0;
-        document.getElementById('st-moves').innerText = 0;
+        area.innerHTML = ""; moves = 0; document.getElementById('st-moves').innerText = 0;
 
         const rect = area.getBoundingClientRect();
-        // 為了確保高層數能放下兩個三角形（正+倒），將間距進一步縮小
-        const coinSize = Math.min(50, (rect.width / (curLv + 3.5)), (rect.height / (curLv * 2.5)));
-        const gap = coinSize + 4;
-        const vGap = gap * 0.866;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+        centerX = rect.width / 2;
+        centerY = rect.height / 2;
         
-        // 核心改動：將格點範圍擴大到整個畫布
-        // 計算畫布能容納的行列數
-        const rowsCount = Math.ceil(rect.height / vGap) + 4;
-        const colsCount = Math.ceil(rect.width / gap) + 4;
-        const startRow = -Math.floor(rowsCount / 2);
-        const startCol = -Math.floor(colsCount / 2);
+        // 自動縮放
+        coinSize = Math.min(50, (rect.width / (curLv + 3)), (rect.height / (curLv * 2.5)));
+        gap = coinSize + 6;
+        vGap = gap * 0.866025; // 精確的 sin(60°)
 
-        for (let r = startRow; r < startRow + rowsCount; r++) {
-            for (let c = startCol; c < startCol + colsCount; c++) {
-                // 等邊三角形交錯座標
-                const px = centerX + (c * gap) - (r * gap / 2);
-                const py = centerY + (r * vGap);
-                
-                // 只在可見範圍內生成
-                if (px > 10 && px < rect.width - 10 && py > 10 && py < rect.height - 10) {
+        // 1. 鋪設大型對齊網格
+        const rBound = Math.ceil(rect.height / vGap);
+        const cBound = Math.ceil(rect.width / gap);
+
+        for (let r = -rBound; r <= rBound; r++) {
+            for (let c = -cBound; c <= cBound; c++) {
+                const pos = getPos(r, c);
+                if (pos.x > 10 && pos.x < rect.width - 10 && pos.y > 10 && pos.y < rect.height - 10) {
                     const s = document.createElement('div');
                     s.className = 'slot';
-                    s.style.width = s.style.height = (coinSize + 4) + 'px';
-                    s.style.left = px + 'px'; s.style.top = py + 'px';
-                    s.dataset.x = px; s.dataset.y = py;
+                    s.style.width = s.style.height = coinSize + 'px';
+                    s.style.left = pos.x + 'px'; s.style.top = pos.y + 'px';
+                    s.dataset.r = r; s.dataset.c = c;
                     area.appendChild(s);
                 }
             }
         }
 
-        // 初始金幣 (置中生成正三角)
-        // 計算金幣群組的垂直偏置，使其在視覺中心
-        const offsetV = (curLv - 1) * vGap / 2;
+        // 2. 放置金幣 (置中正三角)
+        const offsetR = (curLv - 1) / 2; // 垂直偏移量
         for (let r = 0; r < curLv; r++) {
             for (let c = 0; c <= r; c++) {
-                const px = centerX + (c * gap) - (r * gap / 2);
-                const py = (centerY - offsetV) + (r * vGap);
-                createCoin(px, py, coinSize);
+                const targetR = r - Math.floor(offsetR);
+                const targetC = c;
+                const pos = getPos(targetR, targetC);
+                createCoin(pos.x, pos.y, targetR, targetC);
             }
         }
     }
 
-    function createCoin(x, y, size) {
+    function createCoin(startX, startY, initR, initC) {
         const area = document.getElementById('game-area');
         const c = document.createElement('div');
         c.className = 'coin';
-        c.style.width = c.style.height = size + 'px';
-        c.style.left = x + 'px'; c.style.top = y + 'px';
+        c.style.width = c.style.height = coinSize + 'px';
+        c.style.left = startX + 'px'; c.style.top = startY + 'px';
+        c.dataset.r = initR; c.dataset.c = initC;
 
-        let active = false;
-        c.onpointerdown = (e) => {
-            active = true; c.classList.add('dragging');
-            c.setPointerCapture(e.pointerId); beep(600, 0.05);
-        };
+        let isDown = false;
+        c.onpointerdown = (e) => { isDown = true; c.setPointerCapture(e.pointerId); c.classList.add('dragging'); beep(600, 0.05); };
         c.onpointermove = (e) => {
-            if (!active) return;
+            if (!isDown) return;
             const r = area.getBoundingClientRect();
             c.style.left = (e.clientX - r.left) + 'px';
             c.style.top = (e.clientY - r.top) + 'px';
         };
         c.onpointerup = () => {
-            if (!active) return; active = false;
+            if (!isDown) return; isDown = false;
             c.classList.remove('dragging');
-            const cx = parseFloat(c.style.left), cy = parseFloat(c.style.top);
-            let near = null, minDist = size * 0.8;
             
+            const curX = parseFloat(c.style.left);
+            const curY = parseFloat(c.style.top);
+            let bestSlot = null;
+            let minD = coinSize * 0.8;
+
             document.querySelectorAll('.slot').forEach(s => {
-                const d = Math.hypot(parseFloat(s.dataset.x) - cx, parseFloat(s.dataset.y) - cy);
-                if (d < minDist) { minDist = d; near = s; }
+                const dx = parseFloat(s.style.left) - curX;
+                const dy = parseFloat(s.style.top) - curY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < minD) { minD = dist; bestSlot = s; }
             });
 
-            if (near) {
-                // 檢查是否真的換位置了
-                const dx = Math.abs(parseFloat(near.dataset.x) - x);
-                const dy = Math.abs(parseFloat(near.dataset.y) - y);
-                if (dx > 2 || dy > 2) {
-                    moves++; document.getElementById('st-moves').innerText = moves;
-                    // 更新目前的基準座標，防止重複計步
-                    x = parseFloat(near.dataset.x); y = parseFloat(near.dataset.y);
+            if (bestSlot) {
+                // 如果移動到了不同的格子
+                if (bestSlot.dataset.r != c.dataset.r || bestSlot.dataset.c != c.dataset.c) {
+                    moves++;
+                    document.getElementById('st-moves').innerText = moves;
+                    c.dataset.r = bestSlot.dataset.r;
+                    c.dataset.c = bestSlot.dataset.c;
                 }
-                c.style.left = near.dataset.x + 'px';
-                c.style.top = near.dataset.y + 'px';
+                c.style.left = bestSlot.style.left;
+                c.style.top = bestSlot.style.top;
                 beep(300, 0.1);
             } else {
-                c.style.left = x + 'px'; c.style.top = y + 'px';
+                // 沒對準彈回原格點
+                const oldPos = getPos(parseInt(c.dataset.r), parseInt(c.dataset.c));
+                c.style.left = oldPos.x + 'px';
+                c.style.top = oldPos.y + 'px';
             }
         };
         area.appendChild(c);
     }
 
     function checkWin() {
-        const coins = Array.from(document.querySelectorAll('.coin'))
-            .map(c => Math.round(parseFloat(c.style.top)))
-            .sort((a,b) => a - b);
-        
+        const coins = Array.from(document.querySelectorAll('.coin')).map(c => parseInt(c.dataset.r)).sort((a,b) => a - b);
         let rows = [];
         if(coins.length > 0) {
-            let lastY = coins[0], count = 0;
-            coins.forEach(y => {
-                if (Math.abs(y - lastY) < 10) count++;
-                else { rows.push(count); count = 1; lastY = y; }
+            let lastR = coins[0], count = 0;
+            coins.forEach(r => {
+                if (r === lastR) count++;
+                else { rows.push(count); count = 1; lastR = r; }
             });
             rows.push(count);
         }
 
-        let win = rows.length === curLv;
-        if(win) {
-            for(let i=0; i<rows.length; i++) if(rows[i] !== (curLv - i)) win = false;
+        // 檢查是否符合倒三角 (例如 3層: [3, 2, 1])
+        let isWin = rows.length === curLv;
+        if(isWin) {
+            for(let i=0; i<rows.length; i++) if(rows[i] !== (curLv - i)) isWin = false;
         }
 
-        if(win) {
+        if(isWin) {
             beep(880, 0.3);
-            let all = JSON.parse(localStorage.getItem('ranks_sep_v4') || "{}");
+            let all = JSON.parse(localStorage.getItem('ranks_v5') || "{}");
             if (!all[curLv]) all[curLv] = [];
             all[curLv].push({ name: pName, moves: moves });
             all[curLv].sort((a, b) => a.moves - b.moves);
             all[curLv] = all[curLv].slice(0, 5);
-            localStorage.setItem('ranks_sep_v4', JSON.stringify(all));
-            alert(`【神技】第 ${curLv} 層達成！共耗費 ${moves} 步。`);
+            localStorage.setItem('ranks_v5', JSON.stringify(all));
+            alert(`成功倒轉！層數: ${curLv}, 步數: ${moves}`);
             show('scr-lobby');
         } else {
-            alert("陣型不符，倒轉失敗！目前各層金幣數為: " + rows.join(", "));
+            alert("尚未排列成倒三角！目前各層分佈為: " + rows.join(", "));
         }
     }
 

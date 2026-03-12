@@ -3,100 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>移動高手 - 完美對齊版</title>
+    <title>長安奇局：古幣乾坤陣</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
-        :root { --jade: #004d00; --gold: #ffd700; --bronze: #8b4513; --silk: #660000; --paper: #fdf5e6; }
+        
+        :root { 
+            --jade: #005f40; 
+            --gold: #FFD700; 
+            --dark-gold: #B8860B;
+            --crimson: #8B0000; 
+            --dark-red: #4a0000;
+            --ebony: #1a0f00;
+            --paper: #fdf5e6; 
+        }
+        
         * { box-sizing: border-box; touch-action: none; -webkit-user-select: none; }
-        body { margin: 0; background: #000; color: #f0e68c; font-family: "Microsoft JhengHei", serif; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        #app { width: 100vw; height: 100vh; background: radial-gradient(circle, #3a0a0a 0%, #000 100%); position: relative; display: flex; flex-direction: column; border: 4px solid var(--bronze); }
+        
+        body { 
+            margin: 0; 
+            background: #000; 
+            color: #f0e68c; 
+            font-family: "Microsoft JhengHei", serif; 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        
+        /* 華麗的宮廷暗夜背景 */
+        #app { 
+            width: 100vw; 
+            height: 100vh; 
+            background: radial-gradient(circle at center, #3e1800 0%, #0a0400 70%, #000000 100%); 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            border: 4px solid var(--dark-gold); 
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+        
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 20px; text-align: center; }
         .active { display: flex; }
-        h1 { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(2rem, 8vw, 3.5rem); color: var(--gold); margin: 10px 0; }
         
-        /* 遊戲區 */
-        #game-area { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: rgba(0,0,0,0.3); }
-        .slot { position: absolute; border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; }
-        .coin { position: absolute; background: radial-gradient(circle, #f9d976 0%, #b28a15 60%, #8a6d10 100%); border: 2px solid #5a3e00; border-radius: 50%; z-index: 10; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 8px #000; cursor: grab; }
-        .coin::before { content: ""; width: 25%; height: 25%; background: #3d2b00; border: 1px solid var(--gold); }
-        .coin.dragging { z-index: 100; opacity: 0.9; cursor: grabbing; }
+        /* 黃金漸層標題 */
+        h1 { 
+            font-family: 'Ma Shan Zheng', cursive; 
+            font-size: clamp(2.2rem, 8vw, 3.8rem); 
+            margin: 15px 0 10px 0; 
+            background: linear-gradient(to bottom, #FFF8DC, #FFD700, #DAA520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+        }
+        
+        /* 遊戲區與金幣 */
+        #game-area { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: rgba(0,0,0,0.4); box-shadow: inset 0 0 20px #000; }
+        .slot { position: absolute; border: 1px dashed rgba(255, 215, 0, 0.25); border-radius: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; }
+        
+        /* 古幣設計強化 */
+        .coin { 
+            position: absolute; 
+            background: radial-gradient(circle, #f9d976 0%, #d4af37 50%, #8a6d10 100%); 
+            border: 2px solid #3d2b00; 
+            border-radius: 50%; 
+            z-index: 10; 
+            transform: translate(-50%, -50%); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.4), 0 5px 10px rgba(0,0,0,0.7); 
+            cursor: grab; 
+        }
+        .coin::before { content: ""; width: 28%; height: 28%; background: #2a1b00; border: 1px solid var(--gold); box-shadow: inset 0 0 3px #000;}
+        .coin.dragging { z-index: 100; opacity: 0.95; cursor: grabbing; transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4); filter: brightness(1.2);}
 
-        /* UI */
-        .rank-container { width: 100%; max-width: 450px; background: var(--paper); color: #331a00; border: 3px double var(--bronze); padding: 10px; margin: 10px 0; }
-        .rank-tabs { display: flex; overflow-x: auto; gap: 5px; border-bottom: 2px solid var(--bronze); margin-bottom: 5px; }
-        .tab-btn { background: #d2b48c; border: 1px solid var(--bronze); padding: 5px 12px; font-size: 0.8rem; cursor: pointer; }
-        .tab-btn.active { background: var(--silk); color: var(--gold); }
-        .rank-list { height: 80px; overflow-y: auto; font-size: 0.85rem; }
-        .lv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; }
-        .lv-btn { background: var(--jade); color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 4px; cursor: pointer; }
-        .btn { background: var(--jade); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .stats-bar { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); display: flex; justify-content: space-around; border-bottom: 1px solid var(--bronze); }
-        .keyboard { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 15px; width: 100%; max-width: 500px; }
-        .key { background: #333; padding: 12px 2px; border-radius: 4px; color: #fff; font-size: 0.75rem; cursor: pointer; }
+        /* 黑檀木卷軸排行榜 */
+        .rank-container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: linear-gradient(135deg, #2b1700, var(--ebony)); 
+            color: #fce6b8; 
+            border: 2px solid var(--dark-gold); 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .rank-tabs { display: flex; overflow-x: auto; gap: 5px; border-bottom: 2px solid var(--dark-gold); margin-bottom: 8px; padding-bottom: 6px;}
+        .tab-btn { background: #4a2e00; color: #bca075; border: 1px solid var(--dark-gold); padding: 5px 12px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; border-radius: 4px; transition: 0.3s;}
+        .tab-btn.active { background: var(--crimson); color: var(--gold); font-weight: bold; box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);}
+        .rank-list { height: 110px; overflow-y: auto; font-size: 0.9rem; text-align: left; padding-right: 5px;}
+        
+        /* 滾動條美化 */
+        .rank-list::-webkit-scrollbar { width: 4px; }
+        .rank-list::-webkit-scrollbar-thumb { background: var(--dark-gold); border-radius: 2px; }
+
+        .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 5px; border-bottom: 1px dashed #664f2c; }
+        .crown { font-size: 1.2rem; margin-right: 5px; filter: drop-shadow(0 0 2px var(--gold));}
+        .best-tag { background: linear-gradient(45deg, #FFDF00, #DAA520); color: #4a0000; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);}
+
+        /* 寶石風格按鈕 */
+        .lv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 400px; margin-top: 10px;}
+        .lv-btn { 
+            background: linear-gradient(to bottom, #10402b, var(--jade)); 
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 10px 5px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            text-shadow: 1px 1px 2px #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
+            transition: 0.2s;
+        }
+        .lv-btn:active { transform: translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.6); filter: brightness(0.8);}
+        
+        .btn { 
+            background: linear-gradient(to bottom, var(--crimson), var(--dark-red)); 
+            color: var(--gold); 
+            border: 1px solid var(--gold); 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-shadow: 1px 1px 2px #000; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
+            transition: 0.2s;
+            letter-spacing: 1px;
+        }
+        .btn:active { transform: translateY(2px); box-shadow: none; filter: brightness(0.9);}
+        
+        /* 頂部資訊列 */
+        .stats-bar { 
+            width: 100%; 
+            padding: 10px; 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); 
+            display: flex; 
+            justify-content: space-around; 
+            border-bottom: 2px solid var(--dark-gold); 
+            font-size: 1.1rem; 
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        
+        /* 鍵盤 */
+        .keyboard { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 20px; width: 100%; max-width: 500px; }
+        .key { background: linear-gradient(to bottom, #444, #222); border: 1px solid var(--dark-gold); padding: 12px 2px; border-radius: 4px; color: var(--gold); font-size: 0.8rem; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
+        .key:active { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
+<audio id="bg-lobby" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"></audio>
+<audio id="bg-game" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+
 <div id="app">
     <div id="scr-lobby" class="screen active">
-        <h1>移動高手</h1>
+        <h1>長安奇局：古幣乾坤陣</h1>
         <div class="rank-container">
             <div class="rank-tabs" id="rank-tabs"></div>
             <div id="rank-content" class="rank-list"></div>
         </div>
+        <h3 style="margin: 5px 0; color: var(--gold); text-shadow: 1px 1px 3px #000; letter-spacing: 2px;">— 選擇試煉陣法 —</h3>
         <div class="lv-grid" id="lv-grid"></div>
-        <button class="btn" style="margin-top:15px" onclick="toggleFS()">⛶ 全螢幕</button>
+        <button class="btn" style="margin-top:15px; width: 60%; background: linear-gradient(to bottom, #444, #111);" onclick="toggleFS()">⛶ 沉浸全螢幕</button>
     </div>
 
     <div id="scr-login" class="screen">
-        <h2 style="color:var(--gold)">閣下尊姓大名?</h2>
-        <input type="text" id="username" readonly style="width:280px; font-size:2rem; text-align:center; background:#000; border:2px solid var(--gold); color:var(--gold);">
+        <h2 style="color:var(--gold); text-shadow: 0 0 10px var(--crimson);">請賜教閣下尊姓大名</h2>
+        <input type="text" id="username" readonly style="width:280px; height: 50px; font-size:2rem; text-align:center; background:#1a0f00; border:2px solid var(--gold); color:var(--gold); border-radius: 5px; box-shadow: inset 0 0 10px #000;">
         <div class="keyboard" id="kb"></div>
-        <div style="margin-top:20px;">
-            <button class="btn" style="background:#444" onclick="delKey()">退格</button>
-            <button class="btn" onclick="confirmLogin()">開始挑戰</button>
+        <div style="margin-top:25px; display: flex; gap: 15px;">
+            <button class="btn" style="background: linear-gradient(to bottom, #555, #222); border-color: #777;" onclick="delKey()">抹除</button>
+            <button class="btn" onclick="confirmLogin()">入陣挑戰</button>
         </div>
     </div>
 
     <div id="scr-game" class="screen" style="padding:0;">
         <div class="stats-bar">
-            <span>玩家: <b id="st-name"></b></span>
-            <span>層數: <b id="st-lv"></b></span>
-            <span>步數: <b id="st-moves">0</b></span>
+            <span>主理人: <b id="st-name" style="color:var(--gold)"></b></span>
+            <span>陣法: <b id="st-lv" style="color:var(--gold)"></b> 層</span>
+            <span>挪移: <b id="st-moves" style="color:#ff4d4d">0</b> 步</span>
         </div>
         <div id="game-area"></div>
-        <div style="padding: 15px; display: flex; gap: 10px;">
-            <button class="btn" style="background:#444" onclick="toLobby()">首頁</button>
-            <button class="btn" onclick="initLevel()">重置</button>
-            <button class="btn" style="background:var(--silk)" onclick="checkWin()">完成</button>
+        <div style="padding: 15px; display: flex; gap: 10px; background: rgba(0,0,0,0.7); width: 100%; justify-content: center; border-top: 2px solid var(--dark-gold);">
+            <button class="btn" style="background: linear-gradient(to bottom, #555, #222); border-color:#777;" onclick="toLobby()">退回客棧</button>
+            <button class="btn" style="background: linear-gradient(to bottom, #b8860b, #664f2c);" onclick="initLevel()">重置乾坤</button>
+            <button class="btn" style="border-color: #ff9999;" onclick="checkWin()">破陣驗證</button>
         </div>
     </div>
 </div>
 
 <script>
+    // --- 音效引擎 ---
     const actx = new (window.AudioContext || window.webkitAudioContext)();
-    function beep(f, d) {
-        const o = actx.createOscillator(); const g = actx.createGain();
-        o.frequency.value = f; g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
-        o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
+    function beep(f, d, type='sine') {
+        try {
+            const o = actx.createOscillator(); const g = actx.createGain();
+            o.type = type; o.frequency.value = f; 
+            g.gain.setValueAtTime(0.1, actx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
+            o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + d);
+        } catch(e) {}
     }
 
-    let curLv = 2, moves = 0, pName = localStorage.getItem('p_name') || "", viewRankLv = 2;
+    // --- 背景音樂控制 ---
+    function playBGM(type) {
+        try {
+            let lobbyAudio = document.getElementById('bg-lobby');
+            let gameAudio = document.getElementById('bg-game');
+            if(type === 'lobby') {
+                gameAudio.pause();
+                lobbyAudio.play().catch(e => console.log("等待玩家互動解鎖音樂"));
+            } else {
+                lobbyAudio.pause();
+                gameAudio.play().catch(e => console.log("等待玩家互動解鎖音樂"));
+            }
+        } catch(e) {}
+    }
+
+    // 在網頁任意點擊解鎖音效限制
+    document.body.addEventListener('pointerdown', () => {
+        if(actx.state === 'suspended') actx.resume();
+        // 確保音樂啟動
+        let lobbyAudio = document.getElementById('bg-lobby');
+        if (lobbyAudio.paused && document.getElementById('scr-lobby').classList.contains('active')) {
+            lobbyAudio.play();
+        }
+    }, { once: true });
+
+    let curLv = 2, moves = 0, pName = localStorage.getItem('p_name_v7') || "", viewRankLv = 2;
     let gap, vGap, centerX, centerY, coinSize;
 
-    // --- 初始化 UI ---
+    // --- 首頁與排行榜渲染 ---
     function initLobby() {
         const grid = document.getElementById('lv-grid');
         const tabs = document.getElementById('rank-tabs');
         grid.innerHTML = ""; tabs.innerHTML = "";
+        
         for (let i = 2; i <= 10; i++) {
             const lb = document.createElement('div'); lb.className = 'lv-btn';
-            lb.innerHTML = `<b>${i}層</b><br><small>${(i*(i+1))/2}枚</small>`;
-            lb.onclick = () => { curLv = i; pName ? startGame() : show('scr-login'); };
+            lb.innerHTML = `<b>${i}層大陣</b><br><small>古幣 ${(i*(i+1))/2} 枚</small>`;
+            lb.onclick = () => { curLv = i; pName ? startGame() : show('scr-login'); beep(500, 0.1); };
             grid.appendChild(lb);
 
             const tb = document.createElement('div'); tb.className = `tab-btn ${i === viewRankLv ? 'active' : ''}`;
-            tb.innerText = `${i}層`; tb.onclick = () => { viewRankLv = i; updateRankView(); };
+            tb.innerText = `${i}層`; 
+            tb.onclick = () => { viewRankLv = i; updateRankView(); beep(600, 0.1); };
             tabs.appendChild(tb);
         }
         updateRankView();
@@ -105,61 +259,90 @@
     function updateRankView() {
         document.querySelectorAll('.tab-btn').forEach((b, idx) => b.classList.toggle('active', (idx + 2) === viewRankLv));
         const content = document.getElementById('rank-content');
-        let allRanks = JSON.parse(localStorage.getItem('ranks_v5') || "{}");
+        let allRanks = JSON.parse(localStorage.getItem('ranks_v7') || "{}");
         let lvData = allRanks[viewRankLv] || [];
-        content.innerHTML = lvData.length === 0 ? `<p>第 ${viewRankLv} 層暫無紀錄</p>` : 
-            lvData.map((r, i) => `<div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #ccc"><span>${i+1}. ${r.name}</span><span>${r.moves}步</span></div>`).join("");
+        
+        if (lvData.length === 0) {
+            content.innerHTML = `<p style="text-align:center; color:#bca075; margin-top:30px; font-style: italic;">此陣尚無人破解，等你名揚天下！</p>`;
+            return;
+        }
+
+        let html = "";
+        const bestScore = lvData[0].moves; 
+        
+        lvData.forEach((r, i) => {
+            const isBest = (r.moves === bestScore);
+            const crownHtml = isBest ? `<span class="crown">👑</span>` : `<span style="display:inline-block;width:24px;"></span>`;
+            const bestTagHtml = isBest ? `<span class="best-tag">御賜神機</span>` : ``;
+            
+            html += `
+                <div class="rank-item">
+                    <div>${crownHtml}<b>${i+1}. ${r.name}</b> ${bestTagHtml}</div>
+                    <div style="font-weight:bold; color:#ffb366;">${r.moves} 步</div>
+                </div>`;
+        });
+        content.innerHTML = html;
     }
 
-    // --- 鍵盤 ---
+    // --- 虛擬鍵盤 ---
     const kb = document.getElementById('kb');
     "QWERTYUIOPASDFGHJKLZXCVBNM".split("").forEach(k => {
         const d = document.createElement('div'); d.className = 'key'; d.innerText = k;
         d.onclick = () => { document.getElementById('username').value += k; beep(440, 0.1); };
         kb.appendChild(d);
     });
-    function delKey() { const i = document.getElementById('username'); i.value = i.value.slice(0,-1); }
-    function confirmLogin() { pName = document.getElementById('username').value || "HERO"; localStorage.setItem('p_name', pName); startGame(); }
-
-    function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); if (id === 'scr-lobby') initLobby(); }
-    function toLobby() { show('scr-lobby'); }
-    function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-
-    function startGame() { document.getElementById('st-name').innerText = pName; document.getElementById('st-lv').innerText = curLv + "層"; show('scr-game'); initLevel(); }
-
-    // --- 核心幾何計算 (修正對齊) ---
-    function getPos(r, c) {
-        // 使用嚴格的幾何公式
-        return {
-            x: centerX + (c * gap) - (r * gap / 2),
-            y: centerY + (r * vGap)
-        };
+    function delKey() { const i = document.getElementById('username'); i.value = i.value.slice(0,-1); beep(300, 0.1); }
+    function confirmLogin() { 
+        pName = document.getElementById('username').value || "無名大俠"; 
+        localStorage.setItem('p_name_v7', pName); 
+        startGame(); 
     }
+
+    // --- 畫面切換 ---
+    function show(id) { 
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+        document.getElementById(id).classList.add('active'); 
+        if (id === 'scr-lobby') {
+            initLobby(); 
+            playBGM('lobby');
+        } else if (id === 'scr-game') {
+            playBGM('game');
+        }
+    }
+    function toLobby() { show('scr-lobby'); }
+    function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); beep(400,0.1); }
+
+    function startGame() { 
+        document.getElementById('st-name').innerText = pName; 
+        document.getElementById('st-lv').innerText = curLv; 
+        show('scr-game'); 
+        initLevel(); 
+    }
+
+    // --- 網格與對齊核心 ---
+    function getPos(r, c) { return { x: centerX + (c * gap) - (r * gap / 2), y: centerY + (r * vGap) }; }
 
     function initLevel() {
         const area = document.getElementById('game-area');
         area.innerHTML = ""; moves = 0; document.getElementById('st-moves').innerText = 0;
 
         const rect = area.getBoundingClientRect();
-        centerX = rect.width / 2;
-        centerY = rect.height / 2;
+        centerX = rect.width / 2; centerY = rect.height / 2;
         
-        // 自動縮放
-        coinSize = Math.min(50, (rect.width / (curLv + 3)), (rect.height / (curLv * 2.5)));
-        gap = coinSize + 6;
-        vGap = gap * 0.866025; // 精確的 sin(60°)
+        coinSize = Math.min(52, (rect.width / (curLv + 3.5)), (rect.height / (curLv * 2.5)));
+        gap = coinSize + 4;
+        vGap = gap * 0.866025; 
 
-        // 1. 鋪設大型對齊網格
-        const rBound = Math.ceil(rect.height / vGap);
-        const cBound = Math.ceil(rect.width / gap);
+        const rBound = Math.ceil(rect.height / vGap) + 2;
+        const cBound = Math.ceil(rect.width / gap) + 2;
 
         for (let r = -rBound; r <= rBound; r++) {
             for (let c = -cBound; c <= cBound; c++) {
                 const pos = getPos(r, c);
-                if (pos.x > 10 && pos.x < rect.width - 10 && pos.y > 10 && pos.y < rect.height - 10) {
+                if (pos.x > -20 && pos.x < rect.width + 20 && pos.y > -20 && pos.y < rect.height + 20) {
                     const s = document.createElement('div');
                     s.className = 'slot';
-                    s.style.width = s.style.height = coinSize + 'px';
+                    s.style.width = s.style.height = (coinSize + 2) + 'px';
                     s.style.left = pos.x + 'px'; s.style.top = pos.y + 'px';
                     s.dataset.r = r; s.dataset.c = c;
                     area.appendChild(s);
@@ -167,14 +350,12 @@
             }
         }
 
-        // 2. 放置金幣 (置中正三角)
-        const offsetR = (curLv - 1) / 2; // 垂直偏移量
+        const offsetR = (curLv - 1) / 2; 
         for (let r = 0; r < curLv; r++) {
             for (let c = 0; c <= r; c++) {
                 const targetR = r - Math.floor(offsetR);
-                const targetC = c;
-                const pos = getPos(targetR, targetC);
-                createCoin(pos.x, pos.y, targetR, targetC);
+                const pos = getPos(targetR, c);
+                createCoin(pos.x, pos.y, targetR, c);
             }
         }
     }
@@ -188,7 +369,10 @@
         c.dataset.r = initR; c.dataset.c = initC;
 
         let isDown = false;
-        c.onpointerdown = (e) => { isDown = true; c.setPointerCapture(e.pointerId); c.classList.add('dragging'); beep(600, 0.05); };
+        c.onpointerdown = (e) => { 
+            isDown = true; c.setPointerCapture(e.pointerId); 
+            c.classList.add('dragging'); beep(600, 0.05, 'triangle'); 
+        };
         c.onpointermove = (e) => {
             if (!isDown) return;
             const r = area.getBoundingClientRect();
@@ -201,18 +385,16 @@
             
             const curX = parseFloat(c.style.left);
             const curY = parseFloat(c.style.top);
-            let bestSlot = null;
-            let minD = coinSize * 0.8;
+            let bestSlot = null, minD = coinSize; 
 
             document.querySelectorAll('.slot').forEach(s => {
                 const dx = parseFloat(s.style.left) - curX;
                 const dy = parseFloat(s.style.top) - curY;
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dist = Math.hypot(dx, dy);
                 if (dist < minD) { minD = dist; bestSlot = s; }
             });
 
             if (bestSlot) {
-                // 如果移動到了不同的格子
                 if (bestSlot.dataset.r != c.dataset.r || bestSlot.dataset.c != c.dataset.c) {
                     moves++;
                     document.getElementById('st-moves').innerText = moves;
@@ -221,9 +403,8 @@
                 }
                 c.style.left = bestSlot.style.left;
                 c.style.top = bestSlot.style.top;
-                beep(300, 0.1);
+                beep(300, 0.1, 'square');
             } else {
-                // 沒對準彈回原格點
                 const oldPos = getPos(parseInt(c.dataset.r), parseInt(c.dataset.c));
                 c.style.left = oldPos.x + 'px';
                 c.style.top = oldPos.y + 'px';
@@ -237,34 +418,43 @@
         let rows = [];
         if(coins.length > 0) {
             let lastR = coins[0], count = 0;
-            coins.forEach(r => {
-                if (r === lastR) count++;
-                else { rows.push(count); count = 1; lastR = r; }
-            });
+            coins.forEach(r => { if (r === lastR) count++; else { rows.push(count); count = 1; lastR = r; } });
             rows.push(count);
         }
 
-        // 檢查是否符合倒三角 (例如 3層: [3, 2, 1])
         let isWin = rows.length === curLv;
-        if(isWin) {
-            for(let i=0; i<rows.length; i++) if(rows[i] !== (curLv - i)) isWin = false;
-        }
+        if(isWin) { for(let i=0; i<rows.length; i++) if(rows[i] !== (curLv - i)) isWin = false; }
 
         if(isWin) {
-            beep(880, 0.3);
-            let all = JSON.parse(localStorage.getItem('ranks_v5') || "{}");
+            setTimeout(() => beep(523, 0.2), 0);
+            setTimeout(() => beep(659, 0.2), 150);
+            setTimeout(() => beep(783, 0.2), 300);
+            setTimeout(() => beep(1046, 0.4), 450);
+
+            let all = JSON.parse(localStorage.getItem('ranks_v7') || "{}");
             if (!all[curLv]) all[curLv] = [];
+            let prevBest = all[curLv].length > 0 ? all[curLv][0].moves : Infinity;
+            
             all[curLv].push({ name: pName, moves: moves });
-            all[curLv].sort((a, b) => a.moves - b.moves);
-            all[curLv] = all[curLv].slice(0, 5);
-            localStorage.setItem('ranks_v5', JSON.stringify(all));
-            alert(`成功倒轉！層數: ${curLv}, 步數: ${moves}`);
+            all[curLv].sort((a, b) => a.moves - b.moves); 
+            all[curLv] = all[curLv].slice(0, 10); 
+            localStorage.setItem('ranks_v7', JSON.stringify(all));
+
+            if (moves <= prevBest) {
+                alert(`👑 皇冠降臨！\n大俠太神了！你以 ${moves} 步的成績，達成了【御賜神機】最佳解答！`);
+            } else {
+                alert(`破陣成功！\n陣法: ${curLv} 層\n你的步數: ${moves} 步\n(目前本陣最佳為 ${prevBest} 步，望大俠繼續精進！)`);
+            }
+            viewRankLv = curLv;
             show('scr-lobby');
         } else {
-            alert("尚未排列成倒三角！目前各層分佈為: " + rows.join(", "));
+            beep(200, 0.3, 'sawtooth');
+            alert("陣腳未穩！請確保古幣完全顛倒排列。");
         }
     }
 
+    // 初始化不自動播放音樂（等待點擊）
+    document.getElementById('scr-lobby').classList.add('active');
     initLobby();
     window.onresize = () => { if(document.getElementById('scr-game').classList.contains('active')) initLevel(); };
 </script>

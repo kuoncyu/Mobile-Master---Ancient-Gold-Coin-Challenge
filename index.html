@@ -20,25 +20,16 @@
         * { box-sizing: border-box; touch-action: none; -webkit-user-select: none; }
         
         body { 
-            margin: 0; 
-            background: #000; 
-            color: #f0e68c; 
+            margin: 0; background: #000; color: #f0e68c; 
             font-family: "Microsoft JhengHei", serif; 
-            height: 100vh; 
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            height: 100vh; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; 
         }
         
-        /* 華麗的宮廷暗夜背景 */
         #app { 
-            width: 100vw; 
-            height: 100vh; 
+            width: 100vw; height: 100vh; 
             background: radial-gradient(circle at center, #3e1800 0%, #0a0400 70%, #000000 100%); 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
+            position: relative; display: flex; flex-direction: column; 
             border: 4px solid var(--dark-gold); 
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
@@ -46,56 +37,36 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; padding: 20px; text-align: center; }
         .active { display: flex; }
         
-        /* 黃金漸層標題 */
         h1 { 
             font-family: 'Ma Shan Zheng', cursive; 
-            font-size: clamp(2.2rem, 8vw, 3.8rem); 
-            margin: 15px 0 10px 0; 
+            font-size: clamp(2.2rem, 8vw, 3.8rem); margin: 15px 0 10px 0; 
             background: linear-gradient(to bottom, #FFF8DC, #FFD700, #DAA520);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
         }
         
-        /* 遊戲區與金幣 */
         #game-area { flex-grow: 1; position: relative; width: 100%; overflow: hidden; background: rgba(0,0,0,0.4); box-shadow: inset 0 0 20px #000; }
         .slot { position: absolute; border: 1px dashed rgba(255, 215, 0, 0.25); border-radius: 50%; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; }
         
-        /* 古幣設計強化 */
         .coin { 
-            position: absolute; 
-            background: radial-gradient(circle, #f9d976 0%, #d4af37 50%, #8a6d10 100%); 
-            border: 2px solid #3d2b00; 
-            border-radius: 50%; 
-            z-index: 10; 
-            transform: translate(-50%, -50%); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            box-shadow: inset 0 0 5px rgba(255,255,255,0.4), 0 5px 10px rgba(0,0,0,0.7); 
-            cursor: grab; 
+            position: absolute; background: radial-gradient(circle, #f9d976 0%, #d4af37 50%, #8a6d10 100%); 
+            border: 2px solid #3d2b00; border-radius: 50%; z-index: 10; 
+            transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; 
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.4), 0 5px 10px rgba(0,0,0,0.7); cursor: grab; 
         }
         .coin::before { content: ""; width: 28%; height: 28%; background: #2a1b00; border: 1px solid var(--gold); box-shadow: inset 0 0 3px #000;}
         .coin.dragging { z-index: 100; opacity: 0.95; cursor: grabbing; transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 10px 20px rgba(255, 215, 0, 0.4); filter: brightness(1.2);}
 
-        /* 黑檀木卷軸排行榜 */
         .rank-container { 
-            width: 100%; 
-            max-width: 450px; 
-            background: linear-gradient(135deg, #2b1700, var(--ebony)); 
-            color: #fce6b8; 
-            border: 2px solid var(--dark-gold); 
-            padding: 12px; 
-            margin: 10px 0; 
-            border-radius: 8px;
+            width: 100%; max-width: 450px; 
+            background: linear-gradient(135deg, #2b1700, var(--ebony)); color: #fce6b8; 
+            border: 2px solid var(--dark-gold); padding: 12px; margin: 10px 0; border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5);
         }
         .rank-tabs { display: flex; overflow-x: auto; gap: 5px; border-bottom: 2px solid var(--dark-gold); margin-bottom: 8px; padding-bottom: 6px;}
         .tab-btn { background: #4a2e00; color: #bca075; border: 1px solid var(--dark-gold); padding: 5px 12px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; border-radius: 4px; transition: 0.3s;}
         .tab-btn.active { background: var(--crimson); color: var(--gold); font-weight: bold; box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);}
         .rank-list { height: 110px; overflow-y: auto; font-size: 0.9rem; text-align: left; padding-right: 5px;}
-        
-        /* 滾動條美化 */
         .rank-list::-webkit-scrollbar { width: 4px; }
         .rank-list::-webkit-scrollbar-thumb { background: var(--dark-gold); border-radius: 2px; }
 
@@ -103,51 +74,27 @@
         .crown { font-size: 1.2rem; margin-right: 5px; filter: drop-shadow(0 0 2px var(--gold));}
         .best-tag { background: linear-gradient(45deg, #FFDF00, #DAA520); color: #4a0000; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);}
 
-        /* 寶石風格按鈕 */
         .lv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 400px; margin-top: 10px;}
         .lv-btn { 
-            background: linear-gradient(to bottom, #10402b, var(--jade)); 
-            color: var(--gold); 
-            border: 1px solid var(--gold); 
-            padding: 10px 5px; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 0.95rem; 
-            text-shadow: 1px 1px 2px #000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
-            transition: 0.2s;
+            background: linear-gradient(to bottom, #10402b, var(--jade)); color: var(--gold); border: 1px solid var(--gold); 
+            padding: 10px 5px; border-radius: 6px; cursor: pointer; font-size: 0.95rem; text-shadow: 1px 1px 2px #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2); transition: 0.2s;
         }
         .lv-btn:active { transform: translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.6); filter: brightness(0.8);}
         
         .btn { 
-            background: linear-gradient(to bottom, var(--crimson), var(--dark-red)); 
-            color: var(--gold); 
-            border: 1px solid var(--gold); 
-            padding: 10px 20px; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            text-shadow: 1px 1px 2px #000; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2);
-            transition: 0.2s;
-            letter-spacing: 1px;
+            background: linear-gradient(to bottom, var(--crimson), var(--dark-red)); color: var(--gold); border: 1px solid var(--gold); 
+            padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 2px #000; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.2); transition: 0.2s; letter-spacing: 1px;
         }
         .btn:active { transform: translateY(2px); box-shadow: none; filter: brightness(0.9);}
         
-        /* 頂部資訊列 */
         .stats-bar { 
-            width: 100%; 
-            padding: 10px; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); 
-            display: flex; 
-            justify-content: space-around; 
-            border-bottom: 2px solid var(--dark-gold); 
-            font-size: 1.1rem; 
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            width: 100%; padding: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.6)); 
+            display: flex; justify-content: space-around; border-bottom: 2px solid var(--dark-gold); 
+            font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         
-        /* 鍵盤 */
         .keyboard { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 20px; width: 100%; max-width: 500px; }
         .key { background: linear-gradient(to bottom, #444, #222); border: 1px solid var(--dark-gold); padding: 12px 2px; border-radius: 4px; color: var(--gold); font-size: 0.8rem; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.5);}
         .key:active { background: var(--gold); color: #000; }
@@ -196,7 +143,6 @@
 </div>
 
 <script>
-    // --- 音效引擎 ---
     const actx = new (window.AudioContext || window.webkitAudioContext)();
     function beep(f, d, type='sine') {
         try {
@@ -208,35 +154,32 @@
         } catch(e) {}
     }
 
-    // --- 背景音樂控制 ---
     function playBGM(type) {
         try {
             let lobbyAudio = document.getElementById('bg-lobby');
             let gameAudio = document.getElementById('bg-game');
-            if(type === 'lobby') {
-                gameAudio.pause();
-                lobbyAudio.play().catch(e => console.log("等待玩家互動解鎖音樂"));
-            } else {
-                lobbyAudio.pause();
-                gameAudio.play().catch(e => console.log("等待玩家互動解鎖音樂"));
-            }
+            if(type === 'lobby') { gameAudio.pause(); lobbyAudio.play().catch(e => {}); } 
+            else { lobbyAudio.pause(); gameAudio.play().catch(e => {}); }
         } catch(e) {}
     }
 
-    // 在網頁任意點擊解鎖音效限制
     document.body.addEventListener('pointerdown', () => {
         if(actx.state === 'suspended') actx.resume();
-        // 確保音樂啟動
         let lobbyAudio = document.getElementById('bg-lobby');
-        if (lobbyAudio.paused && document.getElementById('scr-lobby').classList.contains('active')) {
-            lobbyAudio.play();
-        }
+        if (lobbyAudio.paused && document.getElementById('scr-lobby').classList.contains('active')) lobbyAudio.play();
     }, { once: true });
 
-    let curLv = 2, moves = 0, pName = localStorage.getItem('p_name_v7') || "", viewRankLv = 2;
+    // 更換了 localStorage key，確保舊的不合格成績不會干擾新的極限判定系統
+    let curLv = 2, moves = 0, pName = localStorage.getItem('p_name_v8') || "", viewRankLv = 2;
     let gap, vGap, centerX, centerY, coinSize;
 
-    // --- 首頁與排行榜渲染 ---
+    // --- 核心：計算每一關的「數學極限最少步數」 ---
+    function getOptimalMoves(lv) {
+        // 公式： floor( n * (n + 1) / 6 )
+        return Math.floor(lv * (lv + 1) / 6);
+    }
+
+    // --- 首頁與排行榜 ---
     function initLobby() {
         const grid = document.getElementById('lv-grid');
         const tabs = document.getElementById('rank-tabs');
@@ -244,7 +187,7 @@
         
         for (let i = 2; i <= 10; i++) {
             const lb = document.createElement('div'); lb.className = 'lv-btn';
-            lb.innerHTML = `<b>${i}層大陣</b><br><small>古幣 ${(i*(i+1))/2} 枚</small>`;
+            lb.innerHTML = `<b>${i}層大陣</b><br><small>極限 ${getOptimalMoves(i)} 步</small>`;
             lb.onclick = () => { curLv = i; pName ? startGame() : show('scr-login'); beep(500, 0.1); };
             grid.appendChild(lb);
 
@@ -259,7 +202,7 @@
     function updateRankView() {
         document.querySelectorAll('.tab-btn').forEach((b, idx) => b.classList.toggle('active', (idx + 2) === viewRankLv));
         const content = document.getElementById('rank-content');
-        let allRanks = JSON.parse(localStorage.getItem('ranks_v7') || "{}");
+        let allRanks = JSON.parse(localStorage.getItem('ranks_v8') || "{}");
         let lvData = allRanks[viewRankLv] || [];
         
         if (lvData.length === 0) {
@@ -268,12 +211,13 @@
         }
 
         let html = "";
-        const bestScore = lvData[0].moves; 
+        const optimal = getOptimalMoves(viewRankLv); // 取得該層的數學極限步數
         
         lvData.forEach((r, i) => {
-            const isBest = (r.moves === bestScore);
-            const crownHtml = isBest ? `<span class="crown">👑</span>` : `<span style="display:inline-block;width:24px;"></span>`;
-            const bestTagHtml = isBest ? `<span class="best-tag">御賜神機</span>` : ``;
+            // 【關鍵修改】：只有成績等於（或低於）理論極限最佳解，才能獲得皇冠與標籤
+            const isPerfect = (r.moves <= optimal);
+            const crownHtml = isPerfect ? `<span class="crown">👑</span>` : `<span style="display:inline-block;width:24px;"></span>`;
+            const bestTagHtml = isPerfect ? `<span class="best-tag">御賜最佳解</span>` : ``;
             
             html += `
                 <div class="rank-item">
@@ -292,34 +236,18 @@
         kb.appendChild(d);
     });
     function delKey() { const i = document.getElementById('username'); i.value = i.value.slice(0,-1); beep(300, 0.1); }
-    function confirmLogin() { 
-        pName = document.getElementById('username').value || "無名大俠"; 
-        localStorage.setItem('p_name_v7', pName); 
-        startGame(); 
-    }
+    function confirmLogin() { pName = document.getElementById('username').value || "無名大俠"; localStorage.setItem('p_name_v8', pName); startGame(); }
 
-    // --- 畫面切換 ---
     function show(id) { 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
         document.getElementById(id).classList.add('active'); 
-        if (id === 'scr-lobby') {
-            initLobby(); 
-            playBGM('lobby');
-        } else if (id === 'scr-game') {
-            playBGM('game');
-        }
+        if (id === 'scr-lobby') { initLobby(); playBGM('lobby'); } 
+        else if (id === 'scr-game') { playBGM('game'); }
     }
     function toLobby() { show('scr-lobby'); }
     function toggleFS() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); beep(400,0.1); }
+    function startGame() { document.getElementById('st-name').innerText = pName; document.getElementById('st-lv').innerText = curLv; show('scr-game'); initLevel(); }
 
-    function startGame() { 
-        document.getElementById('st-name').innerText = pName; 
-        document.getElementById('st-lv').innerText = curLv; 
-        show('scr-game'); 
-        initLevel(); 
-    }
-
-    // --- 網格與對齊核心 ---
     function getPos(r, c) { return { x: centerX + (c * gap) - (r * gap / 2), y: centerY + (r * vGap) }; }
 
     function initLevel() {
@@ -330,22 +258,18 @@
         centerX = rect.width / 2; centerY = rect.height / 2;
         
         coinSize = Math.min(52, (rect.width / (curLv + 3.5)), (rect.height / (curLv * 2.5)));
-        gap = coinSize + 4;
-        vGap = gap * 0.866025; 
+        gap = coinSize + 4; vGap = gap * 0.866025; 
 
-        const rBound = Math.ceil(rect.height / vGap) + 2;
-        const cBound = Math.ceil(rect.width / gap) + 2;
+        const rBound = Math.ceil(rect.height / vGap) + 2; const cBound = Math.ceil(rect.width / gap) + 2;
 
         for (let r = -rBound; r <= rBound; r++) {
             for (let c = -cBound; c <= cBound; c++) {
                 const pos = getPos(r, c);
                 if (pos.x > -20 && pos.x < rect.width + 20 && pos.y > -20 && pos.y < rect.height + 20) {
-                    const s = document.createElement('div');
-                    s.className = 'slot';
+                    const s = document.createElement('div'); s.className = 'slot';
                     s.style.width = s.style.height = (coinSize + 2) + 'px';
                     s.style.left = pos.x + 'px'; s.style.top = pos.y + 'px';
-                    s.dataset.r = r; s.dataset.c = c;
-                    area.appendChild(s);
+                    s.dataset.r = r; s.dataset.c = c; area.appendChild(s);
                 }
             }
         }
@@ -354,60 +278,43 @@
         for (let r = 0; r < curLv; r++) {
             for (let c = 0; c <= r; c++) {
                 const targetR = r - Math.floor(offsetR);
-                const pos = getPos(targetR, c);
-                createCoin(pos.x, pos.y, targetR, c);
+                const pos = getPos(targetR, c); createCoin(pos.x, pos.y, targetR, c);
             }
         }
     }
 
     function createCoin(startX, startY, initR, initC) {
         const area = document.getElementById('game-area');
-        const c = document.createElement('div');
-        c.className = 'coin';
+        const c = document.createElement('div'); c.className = 'coin';
         c.style.width = c.style.height = coinSize + 'px';
         c.style.left = startX + 'px'; c.style.top = startY + 'px';
         c.dataset.r = initR; c.dataset.c = initC;
 
         let isDown = false;
-        c.onpointerdown = (e) => { 
-            isDown = true; c.setPointerCapture(e.pointerId); 
-            c.classList.add('dragging'); beep(600, 0.05, 'triangle'); 
-        };
+        c.onpointerdown = (e) => { isDown = true; c.setPointerCapture(e.pointerId); c.classList.add('dragging'); beep(600, 0.05, 'triangle'); };
         c.onpointermove = (e) => {
-            if (!isDown) return;
-            const r = area.getBoundingClientRect();
-            c.style.left = (e.clientX - r.left) + 'px';
-            c.style.top = (e.clientY - r.top) + 'px';
+            if (!isDown) return; const r = area.getBoundingClientRect();
+            c.style.left = (e.clientX - r.left) + 'px'; c.style.top = (e.clientY - r.top) + 'px';
         };
         c.onpointerup = () => {
-            if (!isDown) return; isDown = false;
-            c.classList.remove('dragging');
-            
-            const curX = parseFloat(c.style.left);
-            const curY = parseFloat(c.style.top);
+            if (!isDown) return; isDown = false; c.classList.remove('dragging');
+            const curX = parseFloat(c.style.left), curY = parseFloat(c.style.top);
             let bestSlot = null, minD = coinSize; 
 
             document.querySelectorAll('.slot').forEach(s => {
-                const dx = parseFloat(s.style.left) - curX;
-                const dy = parseFloat(s.style.top) - curY;
-                const dist = Math.hypot(dx, dy);
-                if (dist < minD) { minD = dist; bestSlot = s; }
+                const dx = parseFloat(s.style.left) - curX, dy = parseFloat(s.style.top) - curY;
+                const dist = Math.hypot(dx, dy); if (dist < minD) { minD = dist; bestSlot = s; }
             });
 
             if (bestSlot) {
                 if (bestSlot.dataset.r != c.dataset.r || bestSlot.dataset.c != c.dataset.c) {
-                    moves++;
-                    document.getElementById('st-moves').innerText = moves;
-                    c.dataset.r = bestSlot.dataset.r;
-                    c.dataset.c = bestSlot.dataset.c;
+                    moves++; document.getElementById('st-moves').innerText = moves;
+                    c.dataset.r = bestSlot.dataset.r; c.dataset.c = bestSlot.dataset.c;
                 }
-                c.style.left = bestSlot.style.left;
-                c.style.top = bestSlot.style.top;
-                beep(300, 0.1, 'square');
+                c.style.left = bestSlot.style.left; c.style.top = bestSlot.style.top; beep(300, 0.1, 'square');
             } else {
                 const oldPos = getPos(parseInt(c.dataset.r), parseInt(c.dataset.c));
-                c.style.left = oldPos.x + 'px';
-                c.style.top = oldPos.y + 'px';
+                c.style.left = oldPos.x + 'px'; c.style.top = oldPos.y + 'px';
             }
         };
         area.appendChild(c);
@@ -426,36 +333,31 @@
         if(isWin) { for(let i=0; i<rows.length; i++) if(rows[i] !== (curLv - i)) isWin = false; }
 
         if(isWin) {
-            setTimeout(() => beep(523, 0.2), 0);
-            setTimeout(() => beep(659, 0.2), 150);
-            setTimeout(() => beep(783, 0.2), 300);
-            setTimeout(() => beep(1046, 0.4), 450);
+            setTimeout(() => beep(523, 0.2), 0); setTimeout(() => beep(659, 0.2), 150);
+            setTimeout(() => beep(783, 0.2), 300); setTimeout(() => beep(1046, 0.4), 450);
 
-            let all = JSON.parse(localStorage.getItem('ranks_v7') || "{}");
+            let all = JSON.parse(localStorage.getItem('ranks_v8') || "{}");
             if (!all[curLv]) all[curLv] = [];
-            let prevBest = all[curLv].length > 0 ? all[curLv][0].moves : Infinity;
             
             all[curLv].push({ name: pName, moves: moves });
             all[curLv].sort((a, b) => a.moves - b.moves); 
             all[curLv] = all[curLv].slice(0, 10); 
-            localStorage.setItem('ranks_v7', JSON.stringify(all));
+            localStorage.setItem('ranks_v8', JSON.stringify(all));
 
-            if (moves <= prevBest) {
-                alert(`👑 皇冠降臨！\n大俠太神了！你以 ${moves} 步的成績，達成了【御賜神機】最佳解答！`);
+            const optimal = getOptimalMoves(curLv);
+
+            if (moves <= optimal) {
+                alert(`👑 皇冠降臨！\n大俠太神了！你以完美無瑕的 ${moves} 步，達成了【御賜最佳解】！\n(此為本陣法之理論極限)`);
             } else {
-                alert(`破陣成功！\n陣法: ${curLv} 層\n你的步數: ${moves} 步\n(目前本陣最佳為 ${prevBest} 步，望大俠繼續精進！)`);
+                alert(`破陣成功！\n陣法: ${curLv} 層\n你的步數: ${moves} 步\n\n(提示：此陣法的絕對極限為 ${optimal} 步，大俠可願再戰以奪皇冠？)`);
             }
-            viewRankLv = curLv;
-            show('scr-lobby');
+            viewRankLv = curLv; show('scr-lobby');
         } else {
-            beep(200, 0.3, 'sawtooth');
-            alert("陣腳未穩！請確保古幣完全顛倒排列。");
+            beep(200, 0.3, 'sawtooth'); alert("陣腳未穩！請確保古幣完全顛倒排列。");
         }
     }
 
-    // 初始化不自動播放音樂（等待點擊）
-    document.getElementById('scr-lobby').classList.add('active');
-    initLobby();
+    document.getElementById('scr-lobby').classList.add('active'); initLobby();
     window.onresize = () => { if(document.getElementById('scr-game').classList.contains('active')) initLevel(); };
 </script>
 </body>
